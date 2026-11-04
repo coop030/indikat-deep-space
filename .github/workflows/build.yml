@@ -93,7 +93,7 @@ jobs:
 
             **Windows:** ZIP entpacken, die `.vst3` nach `C:\Program Files\Common Files\VST3\` kopieren.
             **macOS (am einfachsten, ohne Warnung):** Terminal öffnen und eingeben:
-            `curl -fsSL https://raw.githubusercontent.com/coop030/indikat-deep-space/main/packaging/macos/install.sh | bash`
+            `curl -fsSL https://raw.githubusercontent.com/coop030/indikat-deep-space/main/packaging/macos/install.sh | bash -s deepspace`
             **macOS (manuell):** ZIP entpacken (Doppelklick), dann Terminal öffnen und eingeben:
             `bash ~/Downloads/INDIKAT-Deep-Space/INDIKAT\ installieren.command`
             Das Skript fragt nach dem Mac-Passwort, kopiert VST3 + AU nach Macintosh HD › Library › Audio › Plug-Ins, hebt die Quarantäne auf und signiert die Plugins lokal.
