@@ -1,0 +1,99 @@
+name: Build INDIKAT Deep Space
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            name: Windows
+          - os: macos-15-intel
+            name: macOS
+          - os: ubuntu-24.04
+            name: Linux
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Linux-Abhängigkeiten
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libasound2-dev libx11-dev libxrandr-dev libxinerama-dev \
+            libxcursor-dev libxext-dev libfreetype-dev libfontconfig1-dev libgl1-mesa-dev ninja-build
+
+      - name: Konfigurieren
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" == "macOS" ]; then
+            cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0
+          else
+            cmake -B build -DCMAKE_BUILD_TYPE=Release
+          fi
+
+      - name: Bauen
+        run: cmake --build build --config Release --parallel 4
+
+      # Auf dem jeweiligen System packen, damit Mac-Bundles (Symlinks, Rechte) intakt bleiben
+      - name: Packen
+        shell: bash
+        run: |
+          mkdir -p dist/INDIKAT-Deep-Space
+          cp -R build/IndikatDeepSpace_artefacts/Release/VST3/*.vst3 dist/INDIKAT-Deep-Space/
+          if [ "$RUNNER_OS" == "macOS" ]; then
+            cp -R build/IndikatDeepSpace_artefacts/Release/AU/*.component dist/INDIKAT-Deep-Space/
+            # Ad-hoc-Signatur: Apple Silicon lädt unsignierten Code nicht
+            for b in dist/INDIKAT-Deep-Space/*.vst3 dist/INDIKAT-Deep-Space/*.component; do
+              codesign --force --deep --sign - "$b"
+              codesign --verify --deep --strict "$b"
+            done
+            cp "packaging/macos/INDIKAT installieren.command" dist/INDIKAT-Deep-Space/
+            chmod +x "dist/INDIKAT-Deep-Space/INDIKAT installieren.command"
+            (cd dist && ditto -c -k --keepParent INDIKAT-Deep-Space "INDIKAT-Deep-Space-${{ matrix.name }}.zip")
+          elif [ "$RUNNER_OS" == "Windows" ]; then
+            (cd dist && 7z a -tzip "INDIKAT-Deep-Space-${{ matrix.name }}.zip" INDIKAT-Deep-Space > /dev/null)
+          else
+            (cd dist && zip -qry "INDIKAT-Deep-Space-${{ matrix.name }}.zip" INDIKAT-Deep-Space)
+          fi
+
+      - name: Hochladen
+        uses: actions/upload-artifact@v5
+        with:
+          name: INDIKAT-Deep-Space-${{ matrix.name }}
+          path: dist/INDIKAT-Deep-Space-${{ matrix.name }}.zip
+
+  # Download-Seite: jedes Build-Ergebnis wird als Release veröffentlicht (auch wenn ein System fehlt)
+  release:
+    needs: build
+    if: always() && github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v5
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Release veröffentlichen
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: INDIKAT Deep Space – Build ${{ github.run_number }}
+          make_latest: true
+          fail_on_unmatched_files: false
+          body: |
+            Automatischer Build von `${{ github.sha }}`.
+
+            **Windows:** ZIP entpacken, die `.vst3` nach `C:\Program Files\Common Files\VST3\` kopieren.
+            **macOS:** ZIP entpacken (Doppelklick), dann Terminal öffnen und eingeben:
+            `bash ~/Downloads/INDIKAT-Deep-Space/INDIKAT\ installieren.command`
+            Das Skript fragt nach dem Mac-Passwort, kopiert VST3 + AU nach Macintosh HD › Library › Audio › Plug-Ins, hebt die Quarantäne auf und signiert die Plugins lokal.
+            **Linux:** `.vst3` nach `~/.vst3/`.
+          files: dist/*.zip
