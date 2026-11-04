@@ -10,7 +10,13 @@ Every push to `main` builds Windows, macOS and Linux on GitHub Actions and publi
 [**Releases**](../../releases/latest).
 
 - **Windows:** unzip, copy the `.vst3` to `C:\Program Files\Common Files\VST3\`.
-- **macOS:** unzip (double-click), open Terminal and run
+- **macOS (easiest, no security warning):** open Terminal and paste
+  ```bash
+  curl -fsSL https://raw.githubusercontent.com/coop030/indikat-deep-space/main/packaging/macos/install.sh | bash
+  ```
+  It downloads the latest build, installs VST3 + AU and signs them. Run it again to update.
+  Other INDIKAT plugins: add the repo, e.g. `... | bash -s coop030/indikat-bass`.
+- **macOS (manual):** unzip (double-click), open Terminal and run
   `bash ~/Downloads/INDIKAT-Deep-Space/INDIKAT\ installieren.command`.
   It asks for your Mac password, copies VST3 + AU to Macintosh HD › Library › Audio › Plug-Ins,
   removes the quarantine flag and signs the plugin locally.

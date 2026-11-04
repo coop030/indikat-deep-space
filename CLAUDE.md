@@ -7,3 +7,4 @@
   fixed base size scaled by the editor.
 - Before pushing: build with `-DINDIKAT_TESTS=ON`, run `IndikatRenderTest` (all presets OK) and
   `IndikatRenderTest --snapshot ui.png` to check the layout.
+- macOS install: `packaging/macos/install.sh` (curl one-liner, no quarantine). Point Mac users to it instead of browser downloads.
