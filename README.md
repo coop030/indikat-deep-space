@@ -10,7 +10,14 @@ Every push to `main` builds Windows, macOS and Linux on GitHub Actions and publi
 [**Releases**](../../releases/latest).
 
 - **Windows:** unzip, copy the `.vst3` to `C:\Program Files\Common Files\VST3\`.
-- **macOS (easiest, no security warning):** open Terminal and paste
+- **All INDIKAT plugins at once (macOS / Linux) – recommended:** open Terminal and paste once
+  ```bash
+  curl -fsSL https://raw.githubusercontent.com/coop030/indikat-deep-space/main/packaging/updater/indikat-update.sh | bash
+  ```
+  It finds every INDIKAT plugin (all `coop030/indikat-*` repos and release series), installs only what is newer
+  than what you have, and on macOS puts **`INDIKAT Updater.command`** on the Desktop – from then on, double-click it to update.
+  Options: `| bash -s check` (only show what's new), `| bash -s force` (reinstall all), `| bash -s pluto star-pad` (only those).
+- **macOS, single plugin:** open Terminal and paste
   ```bash
   curl -fsSL https://raw.githubusercontent.com/coop030/indikat-deep-space/main/packaging/macos/install.sh | bash -s deepspace
   ```

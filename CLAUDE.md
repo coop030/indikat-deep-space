@@ -8,3 +8,5 @@
 - Before pushing: build with `-DINDIKAT_TESTS=ON`, run `IndikatRenderTest` (all presets OK) and
   `IndikatRenderTest --snapshot ui.png` to check the layout.
 - macOS install: `packaging/macos/install.sh` (curl one-liner, no quarantine). Point Mac users to it instead of browser downloads.
+- Updater for all INDIKAT plugins: `packaging/updater/indikat-update.sh` (macOS + Linux). It discovers `coop030/indikat-*`
+  repos and release series (`<prefix>build-<n>` with `INDIKAT-<Name>-<OS>.zip` assets) by itself – keep that naming for new plugins.
