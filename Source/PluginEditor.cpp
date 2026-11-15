@@ -425,7 +425,7 @@ void IndikatPanel::paint (juce::Graphics& g)
     g.drawText ("DEEP SPACE", 177, 27, 220, 16, juce::Justification::centredLeft);
     g.setColour (Palette::faint);
     g.setFont (fonts->mono (10.0f).withExtraKerningFactor (0.3f));
-    g.drawText ("REVERB UNIT // 1.0", getWidth() - 28 - 200, 27, 200, 16, juce::Justification::centredRight);
+    g.drawText ("REVERB UNIT // 2.0", getWidth() - 28 - 200, 27, 200, 16, juce::Justification::centredRight);
 
     auto hairline = [&g, this] (int y)
     {

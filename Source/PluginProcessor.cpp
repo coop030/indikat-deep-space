@@ -16,30 +16,49 @@ namespace
         std::initializer_list<std::pair<const char*, float>> values;
     };
 
-    // mode: 0 Deep Hall, 1 Room, 2 Chamber, 3 Plate, 4 Nebula, 5 Ambience   colour: 0 Vintage, 1 Classic, 2 Modern
+    // mode: 0 Concert Hall, 1 Bright Hall, 2 Plate, 3 Room, 4 Chamber, 5 Random Space, 6 Chorus Space, 7 Ambience,
+    //       8 Sanctuary, 9 Dirty Hall, 10 Dirty Plate, 11 Smooth Plate, 12 Smooth Room, 13 Smooth Random, 14 Nonlin,
+    //       15 Chaotic Hall, 16 Chaotic Chamber        colour: 0 1970s, 1 1980s, 2 Now
     const Preset presets[] = {
         { "Init", {} },
-        { "Andromeda Hall", { { "mix", 0.32f }, { "decay", 3.2f }, { "size", 0.85f }, { "attack", 0.55f }, { "highFreq", 5000 },
-                              { "highShelf", -6 }, { "bassMult", 1.3f }, { "depth", 0.3f } } },
-        { "Small Room", { { "mode", 1 }, { "mix", 0.22f }, { "decay", 0.7f }, { "size", 0.6f }, { "attack", 0.3f }, { "early", 0.7f },
-                          { "late", 0.6f }, { "highFreq", 8000 }, { "highShelf", -4 }, { "predelay", 5 }, { "depth", 0.15f } } },
-        { "Vocal Plate", { { "mode", 3 }, { "mix", 0.28f }, { "decay", 1.8f }, { "size", 0.75f }, { "attack", 0.2f }, { "early", 1 },
-                           { "late", 1 }, { "highFreq", 9000 }, { "highShelf", -3 }, { "predelay", 30 }, { "lowCut", 180 }, { "colour", 2 } } },
-        { "Drum Chamber", { { "mode", 2 }, { "mix", 0.25f }, { "decay", 1.2f }, { "size", 0.7f }, { "attack", 0.25f }, { "early", 0.6f },
-                            { "late", 0.8f }, { "highFreq", 6000 }, { "highShelf", -8 }, { "predelay", 8 }, { "lowCut", 120 } } },
-        { "Night Cathedral", { { "mode", 4 }, { "mix", 0.45f }, { "decay", 9 }, { "size", 0.9f }, { "attack", 0.75f }, { "highFreq", 3500 },
+        { "Andromeda Hall", { { "mode", 0 }, { "mix", 0.3f }, { "decay", 3.2f }, { "size", 0.8f }, { "attack", 0.45f }, { "highFreq", 5000 },
+                              { "highShelf", -8 }, { "bassMult", 1.3f }, { "depth", 0.35f } } },
+        { "Bright Vocal Hall", { { "mode", 1 }, { "colour", 2 }, { "mix", 0.25f }, { "decay", 2.2f }, { "predelay", 35 }, { "size", 0.7f },
+                                 { "attack", 0.3f }, { "highShelf", -3 }, { "lowCut", 200 }, { "depth", 0.3f } } },
+        { "Vocal Plate", { { "mode", 2 }, { "colour", 1 }, { "mix", 0.25f }, { "decay", 1.8f }, { "predelay", 25 }, { "size", 0.75f },
+                           { "attack", 0.2f }, { "early", 0.9f }, { "late", 0.9f }, { "highFreq", 8000 }, { "highShelf", -4 }, { "lowCut", 180 } } },
+        { "Small Room", { { "mode", 3 }, { "mix", 0.22f }, { "decay", 0.7f }, { "size", 0.6f }, { "attack", 0.15f }, { "early", 0.7f },
+                          { "late", 0.6f }, { "highFreq", 7000 }, { "highShelf", -6 }, { "predelay", 3 }, { "depth", 0.15f } } },
+        { "Drum Chamber", { { "mode", 4 }, { "colour", 1 }, { "mix", 0.25f }, { "decay", 1.3f }, { "size", 0.7f }, { "attack", 0.2f },
+                            { "early", 0.7f }, { "late", 0.8f }, { "highFreq", 6000 }, { "highShelf", -8 }, { "predelay", 8 }, { "lowCut", 120 } } },
+        { "Random Nebula", { { "mode", 5 }, { "colour", 2 }, { "mix", 0.4f }, { "decay", 6 }, { "size", 0.9f }, { "attack", 0.55f },
+                             { "highFreq", 4500 }, { "highShelf", -9 }, { "rate", 0.5f }, { "depth", 0.6f } } },
+        { "Chorus Space", { { "mode", 6 }, { "colour", 2 }, { "mix", 0.35f }, { "decay", 4 }, { "size", 0.85f }, { "attack", 0.5f },
+                            { "rate", 0.9f }, { "depth", 0.6f }, { "highShelf", -6 } } },
+        { "Ambience", { { "mode", 7 }, { "colour", 2 }, { "mix", 0.3f }, { "decay", 0.5f }, { "size", 0.5f }, { "attack", 0.1f },
+                        { "early", 0.9f }, { "late", 0.5f }, { "predelay", 0 } } },
+        { "Night Cathedral", { { "mode", 8 }, { "mix", 0.45f }, { "decay", 9 }, { "size", 0.95f }, { "attack", 0.6f }, { "highFreq", 3500 },
                                { "highShelf", -12 }, { "bassMult", 1.5f }, { "depth", 0.45f }, { "rate", 0.3f } } },
-        { "Nebula", { { "mode", 4 }, { "mix", 0.55f }, { "decay", 22 }, { "size", 1 }, { "attack", 0.85f }, { "early", 1 }, { "late", 1 },
-                      { "highFreq", 4500 }, { "highShelf", -9 }, { "bassMult", 1.2f }, { "depth", 0.5f }, { "rate", 0.4f }, { "predelay", 60 } } },
-        { "Ambience", { { "mode", 5 }, { "mix", 0.3f }, { "decay", 0.45f }, { "size", 0.5f }, { "attack", 0.1f }, { "early", 0.9f },
-                        { "late", 0.5f }, { "predelay", 0 }, { "colour", 2 } } },
-        { "Vintage Plate", { { "mode", 3 }, { "colour", 0 }, { "mix", 0.3f }, { "decay", 2.4f }, { "size", 0.8f }, { "attack", 0.3f },
-                             { "early", 1 }, { "late", 1 }, { "highFreq", 4000 }, { "highShelf", -6 }, { "lowCut", 150 } } },
-        { "Dark Matter", { { "mode", 0 }, { "colour", 0 }, { "mix", 0.42f }, { "decay", 6 }, { "size", 0.95f }, { "attack", 0.6f },
-                           { "highFreq", 1800 }, { "highShelf", -18 }, { "bassMult", 2 }, { "depth", 0.6f }, { "rate", 0.25f }, { "highCut", 4000 } } },
-        { "Starlight", { { "mode", 0 }, { "colour", 2 }, { "mix", 0.38f }, { "decay", 5 }, { "size", 0.8f }, { "attack", 0.4f },
-                         { "highFreq", 12000 }, { "highShelf", -2 }, { "bassMult", 0.7f }, { "lowCut", 250 }, { "depth", 0.25f }, { "rate", 1.1f } } },
-        { "Slapback Space", { { "mode", 2 }, { "mix", 0.3f }, { "decay", 1.5f }, { "size", 0.5f }, { "attack", 0.15f }, { "early", 0.3f },
+        { "Dirty Hall 1979", { { "mode", 9 }, { "colour", 0 }, { "mix", 0.35f }, { "decay", 3 }, { "size", 0.8f }, { "attack", 0.4f },
+                               { "highShelf", -6 }, { "depth", 0.4f } } },
+        { "Dirty Plate", { { "mode", 10 }, { "colour", 0 }, { "mix", 0.3f }, { "decay", 2.2f }, { "size", 0.8f }, { "attack", 0.25f },
+                           { "highFreq", 4000 }, { "highShelf", -6 }, { "lowCut", 150 } } },
+        { "Smooth Plate", { { "mode", 11 }, { "colour", 2 }, { "mix", 0.3f }, { "decay", 2.6f }, { "size", 0.85f }, { "attack", 0.4f },
+                            { "early", 1 }, { "late", 1 }, { "highFreq", 7000 }, { "highShelf", -4 }, { "lowCut", 150 } } },
+        { "Smooth Room", { { "mode", 12 }, { "colour", 1 }, { "mix", 0.25f }, { "decay", 1.1f }, { "size", 0.65f }, { "attack", 0.35f },
+                           { "highShelf", -6 }, { "predelay", 10 } } },
+        { "Deep Space", { { "mode", 13 }, { "colour", 2 }, { "mix", 0.5f }, { "decay", 22 }, { "size", 1 }, { "attack", 0.8f },
+                          { "early", 1 }, { "late", 1 }, { "highFreq", 4500 }, { "highShelf", -9 }, { "bassMult", 1.2f },
+                          { "depth", 0.5f }, { "rate", 0.35f }, { "predelay", 60 } } },
+        { "Gated Snare", { { "mode", 14 }, { "colour", 1 }, { "mix", 0.35f }, { "decay", 0.6f }, { "attack", 0.0f }, { "early", 1 },
+                           { "late", 0.8f }, { "lowCut", 150 } } },
+        { "Reverse Swell", { { "mode", 14 }, { "colour", 1 }, { "mix", 0.4f }, { "decay", 1.6f }, { "attack", 1.0f }, { "early", 1 },
+                             { "late", 0.9f } } },
+        { "Chaotic Hall", { { "mode", 15 }, { "colour", 2 }, { "mix", 0.4f }, { "decay", 5 }, { "size", 0.9f }, { "attack", 0.5f },
+                            { "rate", 0.4f }, { "depth", 0.5f }, { "highShelf", -8 } } },
+        { "Chaotic Chamber", { { "mode", 16 }, { "colour", 1 }, { "mix", 0.3f }, { "decay", 1.8f }, { "size", 0.7f }, { "attack", 0.3f },
+                               { "rate", 0.6f }, { "depth", 0.4f }, { "highShelf", -6 } } },
+        { "Slapback Space", { { "mode", 4 }, { "mix", 0.3f }, { "decay", 1.5f }, { "size", 0.5f }, { "attack", 0.15f }, { "early", 0.3f },
                               { "late", 0.4f }, { "predelay", 110 }, { "highFreq", 5000 }, { "highShelf", -6 }, { "lowCut", 200 } } },
     };
     constexpr int numPresets = (int) std::size (presets);
@@ -71,7 +90,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout DeepSpaceProcessor::createLa
 
     add ("mix",       "Mix",        NormalisableRange<float> (0.0f, 1.0f), 0.35f, pct);
     add ("predelay",  "Predelay",   skewed (0.0f, 500.0f, 60.0f), 20.0f, ms);
-    add ("decay",     "Decay",      skewed (0.2f, 30.0f, 3.0f), 4.0f, sec);
+    add ("decay",     "Decay",      skewed (0.2f, 70.0f, 3.0f), 2.5f, sec);
     add ("highFreq",  "High Freq",  skewed (500.0f, 20000.0f, 4000.0f), 6000.0f, hz);
     add ("highShelf", "High Shelf", NormalisableRange<float> (-24.0f, 0.0f), -6.0f, dB);
     add ("bassFreq",  "Bass Freq",  skewed (50.0f, 1000.0f, 250.0f), 500.0f, hz);
@@ -86,7 +105,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout DeepSpaceProcessor::createLa
     add ("lowCut",    "Low Cut",    skewed (10.0f, 1000.0f, 100.0f), 40.0f, hz);
 
     StringArray modeNames, colourNames;
-    for (auto& m : DeepSpaceReverb::modes) modeNames.add (m.name);
+    for (int i = 0; i < DeepSpaceReverb::numModes; ++i) modeNames.add (DeepSpaceReverb::modes[i].name);
     for (auto& c : DeepSpaceReverb::colours) colourNames.add (c.name);
     p.push_back (std::make_unique<AudioParameterChoice> (ParameterID { "mode", 1 }, "Mode", modeNames, 0));
     p.push_back (std::make_unique<AudioParameterChoice> (ParameterID { "colour", 1 }, "Color", colourNames, 1));
@@ -154,8 +173,7 @@ void DeepSpaceProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     rp.mode = (int) pMode->load();     rp.colour = (int) pColour->load();
     reverb.setParams (rp);
 
-    const float colourLp = DeepSpaceReverb::colours[juce::jlimit (0, 2, rp.colour)].lowpass;
-    const float hc = juce::jmin (pHighCut->load(), colourLp * 1.6f, (float) sr * 0.45f), lc = pLowCut->load();
+    const float hc = juce::jmin (pHighCut->load(), (float) sr * 0.45f), lc = pLowCut->load();
     if (std::abs (hc - lastHighCut) > 0.01f)
     {
         auto c = juce::dsp::IIR::Coefficients<float>::makeLowPass (sr, hc);
